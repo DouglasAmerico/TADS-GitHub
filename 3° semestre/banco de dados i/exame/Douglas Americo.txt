@@ -1,0 +1,162 @@
+﻿2) 
+create table familia(
+  id_familia integer not null primary key,
+  nm_familia varchar(100),
+  qt_membros integer);
+  
+create table membro(
+  id_membro integer not null primary key,
+  id_membro integer not null references membro,
+  id_familia integer not null references familia,
+  nm_membro varchar(100),
+  tp_sexo char(1),
+  dt_nascimento date);
+  
+alter table membro rename id_membro to id_pai;
+
+3)
+alter table familia drop column qt_membros;
+
+4)
+ alter table membro drop column tp_sexo;
+ alter table membro add constraint tp_sexo check(sexo('M','F'));
+ 
+5)
+alter table membro add constraint nm_membro unique (nm_membro);
+
+6)
+insert into familia values (1,'Americo',3);
+insert into familia values (2,'Silva',9);
+insert into familia values (3,'Zues',8);
+insert into familia values (4,'Oliveira',6);
+insert into familia values (5,'Sigoli',3);
+
+insert into membro values (1,3,1,'Douglas','M','11-10-1995');
+insert into membro values (2,1,2,'Cida','M','11-12-1991');
+insert into membro values (3,5,3,'Rosi','M','11-04-1998');
+insert into membro values (4,2,4,'Gilberto','M','11-06-1993');
+insert into membro values (5,4,5,'Anali','M','11-08-1992');
+
+7)
+ Update membro set dt_nascimento = ’01/01/1980’ where tp_sexo = 'M';
+ Update membro set dt_nascimento = ’01/01/1981’ where tp_sexo = 'F';
+
+
+//----------------------------------------------
+CREATE TABLE CURSO (
+  ID_CURSO INTEGER   NOT NULL ,
+  NM_CURSO VARCHAR(60)    ,
+  VL_CARGA_HORARIA INTEGER    ,
+  IN_SITUACAO CHAR(1)    ,
+  VL_MENSALIDADE NUMERIC(7,2)      ,
+PRIMARY KEY(ID_CURSO));
+
+CREATE TABLE UF (
+  ID_UF INTEGER   NOT NULL ,
+  NM_UF VARCHAR(60)    ,
+  VL_ALIQ NUMERIC(2,1)      ,
+PRIMARY KEY(ID_UF));
+
+CREATE TABLE CIDADE (
+  ID_CIDADE INTEGER   NOT NULL ,
+  ID_UF INTEGER   NOT NULL ,
+  NM_CIDADE VARCHAR(60)      ,
+PRIMARY KEY(ID_CIDADE)  ,
+  FOREIGN KEY(ID_UF)
+    REFERENCES UF(ID_UF));
+    
+CREATE TABLE ALUNO (
+  ID_ALUNO INTEGER   NOT NULL ,
+  ID_CIDADE INTEGER   NOT NULL ,
+  ID_CURSO INTEGER   NOT NULL ,
+  NM_ALUNO VARCHAR(100)    ,
+  NR_MATRICULA INTEGER    ,
+  DT_NASCIMENTO DATE    ,
+  IN_SITUACAO CHAR(1)    ,
+  IN_SEXO CHAR(1)    ,
+  CPF CHAR(11)      ,
+PRIMARY KEY(ID_ALUNO)    ,
+  FOREIGN KEY(ID_CURSO)
+    REFERENCES CURSO(ID_CURSO),
+  FOREIGN KEY(ID_CIDADE)
+    REFERENCES CIDADE(ID_CIDADE));
+    
+ CREATE TABLE NOTA (
+  ID_ALUNO INTEGER   NOT NULL ,
+  VL_NOTA NUMERIC(2,1)    ,
+  DT_PUBLICACAO DATE    ,
+  NR_SEQUENCIA INTEGER    ,
+  NR_ANO INTEGER      ,
+PRIMARY KEY(ID_ALUNO)  ,
+  FOREIGN KEY(ID_ALUNO)
+    REFERENCES ALUNO(ID_ALUNO)); 
+    
+Insert into UF (ID_UF,NM_UF,VL_ALIQ) values ('1','PARANA','2,5');
+Insert into UF (ID_UF,NM_UF,VL_ALIQ) values ('2','SAO PAULO','2');
+Insert into UF (ID_UF,NM_UF,VL_ALIQ) values ('3','RIO DE JANEIRO','2,3');
+Insert into UF (ID_UF,NM_UF,VL_ALIQ) values ('4','MINAS GERAIS','2,4');
+
+Insert into CIDADE (ID_CIDADE,ID_UF,NM_CIDADE) values ('1','2','PRESIDENTE PRUDENTE');
+Insert into CIDADE (ID_CIDADE,ID_UF,NM_CIDADE) values ('2','1','CURITIBA');
+Insert into CIDADE (ID_CIDADE,ID_UF,NM_CIDADE) values ('3','3','NITEROI');
+Insert into CIDADE (ID_CIDADE,ID_UF,NM_CIDADE) values ('4','1','LONDRINA');
+Insert into CIDADE (ID_CIDADE,ID_UF,NM_CIDADE) values ('5','2','OSASCO');
+Insert into CIDADE (ID_CIDADE,ID_UF,NM_CIDADE) values ('6','3','RIO DE JANEIRO');
+Insert into CIDADE (ID_CIDADE,ID_UF,NM_CIDADE) values ('7','3','TERESOPOLIS');
+Insert into CIDADE (ID_CIDADE,ID_UF,NM_CIDADE) values ('8','4','UBERLANDIA');
+Insert into CIDADE (ID_CIDADE,ID_UF,NM_CIDADE) values ('9','2','SAO PAULO');
+Insert into CIDADE (ID_CIDADE,ID_UF,NM_CIDADE) values ('10','2','SANTOS');
+Insert into CIDADE (ID_CIDADE,ID_UF,NM_CIDADE) values ('11','2','CAMPINAS');
+
+Insert into CURSO (ID_CURSO,NM_CURSO,VL_CARGA_HORARIA,IN_SITUACAO,VL_MENSALIDADE) values ('1','MEDICINA VETERINARIA','12000','A','1850');
+Insert into CURSO (ID_CURSO,NM_CURSO,VL_CARGA_HORARIA,IN_SITUACAO,VL_MENSALIDADE) values ('2','ENGENHARIA CIVIL','5000','A','900');
+Insert into CURSO (ID_CURSO,NM_CURSO,VL_CARGA_HORARIA,IN_SITUACAO,VL_MENSALIDADE) values ('3','ADMINISTRACAO','4500','A','500');
+
+Insert into ALUNO (ID_ALUNO,ID_CIDADE,ID_CURSO,NM_ALUNO,NR_MATRICULA,DT_NASCIMENTO,IN_SITUACAO,IN_SEXO,CPF) values ('1000','1','1','JOSE DA SILVA SAURO',null,to_date('01/01/85','DD/MM/RR'),'A','M','15354214588');
+Insert into ALUNO (ID_ALUNO,ID_CIDADE,ID_CURSO,NM_ALUNO,NR_MATRICULA,DT_NASCIMENTO,IN_SITUACAO,IN_SEXO,CPF) values ('1001','2','3','MARIA DAS GRACAS',null,to_date('31/12/89','DD/MM/RR'),'A','F','05789621540');
+Insert into ALUNO (ID_ALUNO,ID_CIDADE,ID_CURSO,NM_ALUNO,NR_MATRICULA,DT_NASCIMENTO,IN_SITUACAO,IN_SEXO,CPF) values ('1002','3','3','FELIPE SANTOS',null,to_date('04/08/86','DD/MM/RR'),'A','M','01478514788');
+Insert into ALUNO (ID_ALUNO,ID_CIDADE,ID_CURSO,NM_ALUNO,NR_MATRICULA,DT_NASCIMENTO,IN_SITUACAO,IN_SEXO,CPF) values ('1003','4','1','JOSEMAR FERREIRA',null,to_date('11/04/92','DD/MM/RR'),'A','M','55471238695');
+Insert into ALUNO (ID_ALUNO,ID_CIDADE,ID_CURSO,NM_ALUNO,NR_MATRICULA,DT_NASCIMENTO,IN_SITUACAO,IN_SEXO,CPF) values ('1004','5','2','JESSICA SOUZA',null,to_date('10/07/87','DD/MM/RR'),'A','F','14578954122');
+Insert into ALUNO (ID_ALUNO,ID_CIDADE,ID_CURSO,NM_ALUNO,NR_MATRICULA,DT_NASCIMENTO,IN_SITUACAO,IN_SEXO,CPF) values ('1005','6','3','HUGO MOREIRA',null,to_date('23/08/89','DD/MM/RR'),'A','M','14253698745');
+Insert into ALUNO (ID_ALUNO,ID_CIDADE,ID_CURSO,NM_ALUNO,NR_MATRICULA,DT_NASCIMENTO,IN_SITUACAO,IN_SEXO,CPF) values ('1006','7','1','MARCELINO FERRAZ',null,to_date('10/10/90','DD/MM/RR'),'A','M','15147715899');
+Insert into ALUNO (ID_ALUNO,ID_CIDADE,ID_CURSO,NM_ALUNO,NR_MATRICULA,DT_NASCIMENTO,IN_SITUACAO,IN_SEXO,CPF) values ('1007','8','2','FABIANA GONCALVES',null,to_date('07/06/97','DD/MM/RR'),'A','F','12566533500');
+Insert into ALUNO (ID_ALUNO,ID_CIDADE,ID_CURSO,NM_ALUNO,NR_MATRICULA,DT_NASCIMENTO,IN_SITUACAO,IN_SEXO,CPF) values ('1008','1','3','CARLOS DIAS PONTES',null,to_date('08/01/88','DD/MM/RR'),'A','M','12354126600');
+Insert into ALUNO (ID_ALUNO,ID_CIDADE,ID_CURSO,NM_ALUNO,NR_MATRICULA,DT_NASCIMENTO,IN_SITUACAO,IN_SEXO,CPF) values ('1009','2','1','DEBORA DA SILVA',null,to_date('15/11/89','DD/MM/RR'),'A','F','04578898844');
+Insert into ALUNO (ID_ALUNO,ID_CIDADE,ID_CURSO,NM_ALUNO,NR_MATRICULA,DT_NASCIMENTO,IN_SITUACAO,IN_SEXO,CPF) values ('1010','3','2','JULIANA PIMENTEL',null,to_date('17/03/92','DD/MM/RR'),'A','F','00475558889');
+Insert into ALUNO (ID_ALUNO,ID_CIDADE,ID_CURSO,NM_ALUNO,NR_MATRICULA,DT_NASCIMENTO,IN_SITUACAO,IN_SEXO,CPF) values ('1011','4','3','ISABELA OLIVEIRA',null,to_date('23/02/91','DD/MM/RR'),'A','F','04477444777');
+Insert into ALUNO (ID_ALUNO,ID_CIDADE,ID_CURSO,NM_ALUNO,NR_MATRICULA,DT_NASCIMENTO,IN_SITUACAO,IN_SEXO,CPF) values ('1012','5','1','JAQUELINE GOMES',null,to_date('05/06/87','DD/MM/RR'),'A','F','75325285400');
+Insert into ALUNO (ID_ALUNO,ID_CIDADE,ID_CURSO,NM_ALUNO,NR_MATRICULA,DT_NASCIMENTO,IN_SITUACAO,IN_SEXO,CPF) values ('1013','6','2','ALINE BUENO',null,to_date('09/09/88','DD/MM/RR'),'A','F','42255885633');
+Insert into ALUNO (ID_ALUNO,ID_CIDADE,ID_CURSO,NM_ALUNO,NR_MATRICULA,DT_NASCIMENTO,IN_SITUACAO,IN_SEXO,CPF) values ('1014','7','3','MARCIA REZENDE',null,to_date('05/04/84','DD/MM/RR'),'A','F','57585452875');
+Insert into ALUNO (ID_ALUNO,ID_CIDADE,ID_CURSO,NM_ALUNO,NR_MATRICULA,DT_NASCIMENTO,IN_SITUACAO,IN_SEXO,CPF) values ('1015','8','1','PEDRO PAULO DINIZ',null,to_date('23/02/78','DD/MM/RR'),'A','M','45287252527');
+
+Insert into NOTA (ID_ALUNO,VL_NOTA,DT_PUBLICACAO,NR_SEQUENCIA,NR_ANO) values ('1000','7,5',null,null,'2011');
+Insert into NOTA (ID_ALUNO,VL_NOTA,DT_PUBLICACAO,NR_SEQUENCIA,NR_ANO) values ('1001','6,9',null,null,'2011');
+Insert into NOTA (ID_ALUNO,VL_NOTA,DT_PUBLICACAO,NR_SEQUENCIA,NR_ANO) values ('1002','7,1',null,null,'2011');
+Insert into NOTA (ID_ALUNO,VL_NOTA,DT_PUBLICACAO,NR_SEQUENCIA,NR_ANO) values ('1003','8,5',null,null,'2011');
+Insert into NOTA (ID_ALUNO,VL_NOTA,DT_PUBLICACAO,NR_SEQUENCIA,NR_ANO) values ('1004','9',null,null,'2011');
+Insert into NOTA (ID_ALUNO,VL_NOTA,DT_PUBLICACAO,NR_SEQUENCIA,NR_ANO) values ('1005','7,3',null,null,'2011');
+Insert into NOTA (ID_ALUNO,VL_NOTA,DT_PUBLICACAO,NR_SEQUENCIA,NR_ANO) values ('1006','8,8',null,null,'2011');
+Insert into NOTA (ID_ALUNO,VL_NOTA,DT_PUBLICACAO,NR_SEQUENCIA,NR_ANO) values ('1007','6,5',null,null,'2011');
+Insert into NOTA (ID_ALUNO,VL_NOTA,DT_PUBLICACAO,NR_SEQUENCIA,NR_ANO) values ('1008','7,8',null,null,'2011');
+Insert into NOTA (ID_ALUNO,VL_NOTA,DT_PUBLICACAO,NR_SEQUENCIA,NR_ANO) values ('1009','3,4',null,null,'2011');
+Insert into NOTA (ID_ALUNO,VL_NOTA,DT_PUBLICACAO,NR_SEQUENCIA,NR_ANO) values ('1010','1,5',null,null,'2011');
+Insert into NOTA (ID_ALUNO,VL_NOTA,DT_PUBLICACAO,NR_SEQUENCIA,NR_ANO) values ('1011','9,1',null,null,'2011');
+Insert into NOTA (ID_ALUNO,VL_NOTA,DT_PUBLICACAO,NR_SEQUENCIA,NR_ANO) values ('1012','8,6',null,null,'2011');
+Insert into NOTA (ID_ALUNO,VL_NOTA,DT_PUBLICACAO,NR_SEQUENCIA,NR_ANO) values ('1013','7,5',null,null,'2011');
+Insert into NOTA (ID_ALUNO,VL_NOTA,DT_PUBLICACAO,NR_SEQUENCIA,NR_ANO) values ('1014','4,6',null,null,'2011');
+Insert into NOTA (ID_ALUNO,VL_NOTA,DT_PUBLICACAO,NR_SEQUENCIA,NR_ANO) values ('1015','7,8',null,null,'2011');
+    
+
+8)
+select count(cidade.id_cidade) as ID, cidade.nm_cidade as Cidade from cidade,aluno
+where cidade.id_cidade = aluno.id_cidade
+group by cidade.nm_cidade
+
+select cidade.nm_cidade as Cidade , max(count(aluno.id_aluno)) from cidade, aluno
+group by cidade.nm_cidade
+order by cidade.nm_cidade asc
+
+
+select cidade.id_cidade as ID, cidade.nm_cidade as Cidade from cidade,aluno
+group by cidade.nm_cidade
+9)

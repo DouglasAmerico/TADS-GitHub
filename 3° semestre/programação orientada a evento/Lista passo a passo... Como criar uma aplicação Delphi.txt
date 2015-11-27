@@ -1,0 +1,251 @@
+1- crie o banco de dados no ibexpert
+
+2- abra a aplicação delphi, salve os arquivos dentro de sua pasta de preferenceia, o primeiro com u_principal,
+o segundo como p_principal
+
+3- renomeio o form 1 como quiser... no caption, em name coloque f_principal
+
+4- va na palheta standard, clique no componente mainmenu e coloque no formulario, editeo como queira
+
+5- salve a aplicação
+
+6- crie um data module  e mude o nome dele para data modulo
+ 
+7- va na palheta interbase, adcione um ibdatabase no datamodule, mude o nome para ibd_banco, clique em sima dele abra a tela e faça a concecção com o banco
+
+8- clique em ibtransection e coloque no data modulo tambem, renomeie ele para ib_transacao
+
+9- ligue o ib_transacao com o database e o data base com o transacao
+
+10- ative os dois primeiro o database depois o outro
+
+11-salve a aplicação e salve o datamodulo como u_data_modulo
+ 
+12- adicione o dataset para gerar o sql
+
+13- edite todos os campos para que não fique dataset1, ou datamodulo1 ou database1
+ 
+14- interligue ele com o banco, depois clique em sima com o botão direito e idite sql
+
+15- coloque como o exemplo
+	select * from cad_cidade
+	where
+	cd_cidade = :pcidade
+
+16- com o botão direito novamente, dataset editor, clique em select primary key, depois em gereate sql
+
+17- active true no dataset tambem
+
+18- altere o nome do data set para IBD_cidade por exemplo para referencialo no cadastro que ele esta fazendo
+
+19- dois cliques em ibd_cidade e add fields
+
+ 
+--------------------------------------------------------------------
+cadastro
+
+1-botões exemplo
+
+
+1.1-novo--
+   datamodulo.IBD_tipo_flor.Insert;
+   DBE_ds_tipo_flor.SetFocus;
+---
+
+1.2-alterar--
+    if datamodulo.IBD_tipo_flor.IsEmpty then
+        showmessage('Flor não encontrada.')
+     else
+         datamodulo.IBD_tipo_flor.Edit;
+         DBE_ds_tipo_flor.SetFocus;
+---
+
+1.3-gravar--
+    if DBE_ds_tipo_flor.Text = '' then
+       begin
+          showmessage('Campo Obrigatorio Vazio.');
+          DBE_ds_tipo_flor.SetFocus;
+       end
+    else
+        begin
+          if application.MessageBox('Deseja Confirmar esse registro?','Confirmar registro', mb_iconquestion+mb_yesno) = idyes then
+            begin
+              datamodulo.IBD_tipo_flor.Post;
+              datamodulo.IBD_tipo_flor.Transaction.CommitRetaining;
+            end
+        end;
+---
+
+1.4-excluir--
+     if not datamodulo.IBD_tipo_flor.IsEmpty then
+        begin
+          if application.MessageBox('Deseja Excluir o registro','Excluir registro',mb_iconquestion+mb_yesno) = idyes then
+            begin
+              datamodulo.IBD_tipo_flor.Delete;
+              datamodulo.IBTransacao.CommitRetaining;
+            end;
+        end
+      else
+        begin
+           showmessage('Não existe registro ou não foi feita a seleção do registro a ser excluido');
+           DBE_ds_tipo_flor.SetFocus;
+        end;
+---
+
+1.5-cancelar---
+            datamodulo.IBD_tipo_flor.Cancel;
+            datamodulo.IBTransacao.RollbackRetaining;
+            DBE_ds_tipo_flor.SetFocus;
+ ---
+
+2- atribuindo id altomatico
+
+ 20.1- crie uma query e coloque o codigo assim: select max(ID_CLIENTE) + 1 as ultimo from CLIENTE
+   para que ele atruibua o id altomaticamente armazenando o valo na variavel ultimo..
+ 
+2.2- if datamodulo.IBD_Cliente.State in [dsinsert] then
+        begin
+            datamodulo.IBQ_consulta_ultimo_codigo.Close;
+            datamodulo.IBQ_consulta_ultimo_codigo.Open;
+              if datamodulo.IBQ_consulta_ultimo_codigoULTIMO.AsInteger = 0 then
+                 datamodulo.IBD_ClienteID_CLIENTE.AsInteger:= 1
+              else
+                 datamodulo.IBD_ClienteID_CLIENTE.AsInteger:= datamodulo.IBQ_consulta_ultimo_codigoULTIMO.AsInteger;
+                 // coloquei tambem oa outros campos de id dasoutras tabelas
+                 // para qdatamodulo.IBD_enderecoIDue possa ser atribuidos normalmente.
+               
+        end;
+
+	coloque mais ou menos assim dentro do evento before post do data set...
+
+2.3- para travar o botão de id clique nele e desetive a propriedade enabled colocando para false
+
+--------------------------------------------------------------------
+// consulta
+
+1- primaeira coisa é colocar a query na palheta interbase e coocar no seu datamodulo, renomeie como prescisar
+
+2- referencie ele com o banco de dados
+
+3- depois de referenciar vamos colocar o sql, clique com o botão direito edite  sql
+
+4- em tão digite..
+		select * from tabela
+		where
+		chave primaria = :pcharveprimaria
+
+5- coso tenha que colocar tabelas referentes....esta o exemplo do roseiral
+
+		select cliente.*,endereco.*,telefone.* from CLIENTE
+
+		inner join endereco on (endereco.id_cliente = cliente.id_cliente)
+
+		inner join telefone on (telefone.id_cliente = cliente.id_cliente)
+
+		where
+		cliente.id_cliente = :pconsultacliente
+
+6- mude o active para true
+
+7- dois cliques na query e coloque os fields no campinho prescionando o botão direito add field
+
+8- adicione um data source para a consulta na data access, renomeie de acordo, 
+referencie ele para o data set, que vai ser a query
+
+9- clique na palheta data control para adicionar a dbgrid
+
+10- renomeie ela, ligue ele com o data source que acabou de criar 
+
+11- duplo clique na grid,addione os fields, cique em sima do field que deseja alterar va em 
+title e altere o capitio que esta lah de acordo com oq vc deseja
+
+12- va em standard e clique no edit, renomeie como prescisar, e tire as coisas do text para que não apareça nada
+
+13- clique em label e identifique o campo de pesquisa que acabou de colocar
+
+14- coloque um botão do tipo speed botom, renomeie para pesquisa e coloque um capition
+
+15- vamos editar o botão de pesquisa
+
+16- 
+   if e_pesquisar_cidade.Text = '' then
+     begin
+        datamodulo.IBQ_cidade.Close;
+        datamodulo.IBQ_cidade.SQL.Clear;
+        datamodulo.IBQ_cidade.SQL.Add('select * from cidade');
+        datamodulo.IBQ_cidade.Open;
+        if datamodulo.IBQ_cidade.IsEmpty then
+          begin
+            showmessage('Nenhuma cidade correspondente');
+            e_pesquisar_cidade.SetFocus;
+          end
+        else
+          activecontrol:= dbg_consulta_cidade;
+          e_pesquisar_cidade.Clear;
+     end;
+			//------
+	if e_pesquisar_cidade.Text <> '' then
+     begin
+        datamodulo.IBQ_cidade.Close;
+        datamodulo.IBQ_cidade.SQL.Clear;
+        datamodulo.IBQ_cidade.SQL.Add('select * from cidade');
+        datamodulo.IBQ_cidade.SQL.Add('where ds_cidade like '+quotedstr('%'+e_pesquisar_cidade.Text + '%'));
+        datamodulo.IBQ_cidade.Open;
+        if datamodulo.IBQ_cidade.IsEmpty then
+          begin
+            showmessage('Nenhuma cidade correspondente');
+            e_pesquisar_cidade.SetFocus;
+          end
+        else
+          activecontrol:= dbg_consulta_cidade;
+          e_pesquisar_cidade.Clear;
+     end;
+			
+
+-------------------------------------------------------------------
+ validações
+1- para marcar o campo total na grid clique nela, va em options
+
+2- va em options mude a propriedade dgrollselect para true, e tambem dgawaysshowselect para true tambem
+
+3- agora va em eventos, para colocar o dados para ir para a edição na tela de cadastro
+
+4- clique em ondbclick, e edite como o exemplo
+
+	datamodulo.IBD_tipo_flor.Close;
+    	datamodulo.IBD_tipo_flor.ParamByName('ptipoflor').AsInteger:=
+    	datamodulo.IBQ_tipo_florCD_TIPO_FLOR.AsInteger;
+    	datamodulo.IBD_tipo_flor.Open;
+    	PaginaControle_tipo_flor.ActivePage := Tab_cadastro_tipo_flor;
+    	DBE_ds_tipo_flor.SetFocus;
+
+5- e o evento onkeypreess assim
+		
+   if key = #13 then
+     begin
+        datamodulo.IBD_tipo_flor.Close;
+        datamodulo.IBD_tipo_flor.ParamByName('ptipoflor').AsInteger:=
+        datamodulo.IBQ_tipo_florCD_TIPO_FLOR.AsInteger;
+        datamodulo.IBD_tipo_flor.Open;
+        PaginaControle_tipo_flor.ActivePage := Tab_cadastro_tipo_flor;
+        DBE_ds_tipo_flor.SetFocus;
+     end;
+
+----------------------------------------------------------------------------
+
+if datamodulo.ibd_cidade.state in [dsinsert,dsedit] then
+ begin
+   b_novo.enabled:= false;
+   b_editar.enabled:= false;
+   b_excluir.enabled:= false;
+   b_gravar.enbled:= true;
+   b_cancelar.enabled:= true;
+ end
+else 
+ begin
+   b_novo.enabled:= true;
+   b_editar.enabled:= true;
+   b_excluir.enabled:= true;
+   b_gravar.enbled:= false;
+   b_cancelar.enabled:= false;
+ end; 

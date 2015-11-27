@@ -1,0 +1,53 @@
+unit U_ordem_de_servico_Douglas_Americo;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, ComCtrls, DB, StdCtrls, Grids, DBGrids;
+
+type
+  TF_ordem_de_servico = class(TForm)
+    PaginaControle_ordem: TPageControl;
+    Tab_consulta_ordem: TTabSheet;
+    DBG_ordem_servico: TDBGrid;
+    DBG_servico: TDBGrid;
+    DBG_pecas: TDBGrid;
+    E_pesquisar_ordem: TEdit;
+    B_pesquisar_ordem: TButton;
+    DS_ordem_servico: TDataSource;
+    DS_servicos: TDataSource;
+    DS_pecas: TDataSource;
+    procedure B_pesquisar_ordemClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  F_ordem_de_servico: TF_ordem_de_servico;
+
+implementation
+
+uses U_Data_modulo_Douglas_Americo;
+
+{$R *.dfm}
+
+procedure TF_ordem_de_servico.B_pesquisar_ordemClick(Sender: TObject);
+begin
+   if E_pesquisar_ordem.Text = '' then
+     begin
+      {datamodulo.IBQ_ordem_servico.Close;
+      datamodulo.IBQ_servicos.Close;
+      datamodulo.IBQ_pecas.Close;
+      datamodulo.IBQ_ordem_servico.Open;
+      datamodulo.IBQ_servicos.Open;
+      datamodulo.IBQ_pecas.Open;
+      datamodulo
+        }
+     end;
+
+end;
+
+end.

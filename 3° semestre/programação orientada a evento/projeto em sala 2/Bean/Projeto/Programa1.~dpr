@@ -1,0 +1,15 @@
+program Programa1;
+
+uses
+  Forms,
+  UPrincipal in 'UPrincipal.pas' {FPrincipal},
+  UCidade in 'UCidade.pas' {FCADCIDADE};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.CreateForm(TFPrincipal, FPrincipal);
+  Application.CreateForm(TFCADCIDADE, FCADCIDADE);
+  Application.Run;
+end.

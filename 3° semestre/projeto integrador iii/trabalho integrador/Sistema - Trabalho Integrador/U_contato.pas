@@ -1,0 +1,196 @@
+unit U_contato;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, Buttons, DBCtrls, DB, Mask, ComCtrls, ExtCtrls, Grids,
+  DBGrids;
+
+type
+  TF_contato = class(TForm)
+    PaginaControle_contato: TPageControl;
+    Tab_cadastro_contato: TTabSheet;
+    Tab_consulta_contato: TTabSheet;
+    L_nr_sequencia: TLabel;
+    DBE_nr_sequencia: TDBEdit;
+    DS_cadastro_contato: TDataSource;
+    L_cd_cliente: TLabel;
+    L_nm_contato: TLabel;
+    DBE_nm_contato: TDBEdit;
+    L_ds_email: TLabel;
+    DBE_ds_email: TDBEdit;
+    CB_cd_cliente: TDBLookupComboBox;
+    DS_lista_cliente_contato: TDataSource;
+    B_novo: TBitBtn;
+    B_alterar: TBitBtn;
+    B_gravar: TBitBtn;
+    B_excluir: TBitBtn;
+    B_cancel: TBitBtn;
+    DBG_consulta_contato: TDBGrid;
+    E_pesquisar_contato: TEdit;
+    B_pesquisar_contato: TButton;
+    DS_consulta_contato: TDataSource;
+    RD_contato: TRadioGroup;
+    procedure B_novoClick(Sender: TObject);
+    procedure B_alterarClick(Sender: TObject);
+    procedure B_gravarClick(Sender: TObject);
+    procedure B_excluirClick(Sender: TObject);
+    procedure B_cancelClick(Sender: TObject);
+    procedure DS_cadastro_contatoStateChange(Sender: TObject);
+    procedure B_pesquisar_contatoClick(Sender: TObject);
+    procedure DBG_consulta_contatoCellClick(Column: TColumn);
+    procedure FormActivate(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  F_contato: TF_contato;
+
+implementation
+
+uses U_data_modulo;
+
+{$R *.dfm}
+
+procedure TF_contato.B_novoClick(Sender: TObject);
+begin
+   datamodulo.IBD_contato.Insert;
+   cb_cd_cliente.SetFocus;
+end;
+
+procedure TF_contato.B_alterarClick(Sender: TObject);
+begin
+    if datamodulo.IBD_contato.IsEmpty then
+       showmessage('Contato não encontrada')
+    else
+       datamodulo.IBD_contato.Edit;
+       cb_cd_cliente.SetFocus;
+end;
+
+procedure TF_contato.B_gravarClick(Sender: TObject);
+begin
+    if (cb_cd_cliente.Text = '')  or
+       (dbe_nm_contato.Text = '') then
+       begin
+          showmessage('Campo Obrigatorio Vazio');
+          cb_cd_cliente.SetFocus;
+       end
+    else
+       begin
+          if application.MessageBox('Deseja Confirmar esse registro?','Confirmar registro', mb_iconquestion+mb_yesno) = idyes then
+            begin
+              datamodulo.IBD_contato.Post;
+              datamodulo.IBD_contato.Transaction.CommitRetaining;
+            end;
+       end;
+end;
+
+procedure TF_contato.B_excluirClick(Sender: TObject);
+begin
+    if not datamodulo.IBD_contato.IsEmpty then
+       begin
+          if application.MessageBox('Deseja Excluir o registro','Excluir registro',mb_iconquestion+mb_yesno) = idyes then
+            begin
+                datamodulo.IBD_contato.Delete;
+                datamodulo.IBTransacao.CommitRetaining;
+            end;
+       end
+     else
+       begin
+          showmessage('Não existe ou não foi selecionado o registro');
+          cb_cd_cliente.SetFocus;
+       end;
+end;
+
+procedure TF_contato.B_cancelClick(Sender: TObject);
+begin
+   datamodulo.IBD_contato.Cancel;
+   datamodulo.IBTransacao.RollbackRetaining;
+   cb_cd_cliente.SetFocus;
+end;
+
+procedure TF_contato.DS_cadastro_contatoStateChange(Sender: TObject);
+begin
+if datamodulo.IBD_contato.State in [dsedit,dsinsert] then
+        begin
+          b_novo.Enabled    := false;
+          b_alterar.Enabled := false;
+          b_gravar.Enabled  := true;
+          b_excluir.Enabled := false;
+          b_cancel.Enabled  := true;
+        end
+      else
+        begin
+          b_novo.Enabled    := true;
+          b_alterar.Enabled := true;
+          b_gravar.Enabled  := false;
+          b_excluir.Enabled := true;
+          b_cancel.Enabled  := false;
+        end;
+end;
+
+procedure TF_contato.B_pesquisar_contatoClick(Sender: TObject);
+begin
+      if e_pesquisar_contato.Text = '' then
+     begin
+        datamodulo.IBQ_contato.Close;
+        datamodulo.IBQ_contato.SQL.Clear;
+        datamodulo.IBQ_contato.SQL.Add('select cad_contatos.*, cad_cliente.ds_cliente from CAD_CONTATOS');
+        datamodulo.IBQ_contato.SQL.Add('inner join cad_cliente on (cad_contatos.cd_cliente = cad_cliente.cd_cliente)');
+        datamodulo.IBQ_contato.Open;
+        if datamodulo.IBQ_contato.IsEmpty then
+          begin
+            showmessage('Nenhuma contato correspondente');
+            e_pesquisar_contato.SetFocus;
+          end
+        else
+          activecontrol:= dbg_consulta_contato;
+          e_pesquisar_contato.Clear;
+     end;
+    //------------------
+    if e_pesquisar_contato.Text <> '' then
+     begin
+        datamodulo.IBQ_contato.Close;
+        datamodulo.IBQ_contato.SQL.Clear;
+        datamodulo.IBQ_contato.SQL.Add('select cad_contatos.*, cad_cliente.ds_cliente from CAD_CONTATOS');
+        datamodulo.IBQ_contato.SQL.Add('inner join cad_cliente on (cad_contatos.cd_cliente = cad_cliente.cd_cliente)');
+        if rd_contato.ItemIndex = 0 then
+             datamodulo.IBQ_contato.SQL.Add('where nr_sequencia like '+quotedstr('%'+e_pesquisar_contato.Text + '%'))
+        else if rd_contato.ItemIndex = 1 then
+             datamodulo.IBQ_contato.SQL.Add('where nm_contato like '+quotedstr('%'+e_pesquisar_contato.Text + '%'))
+        else datamodulo.IBQ_contato.SQL.Add('where ds_cliente like '+quotedstr('%'+e_pesquisar_contato.Text + '%'));
+        datamodulo.IBQ_contato.Open;
+        if datamodulo.IBQ_contato.IsEmpty then
+          begin
+            showmessage('Nenhuma contato correspondente');
+            e_pesquisar_contato.SetFocus;
+          end
+        else
+          activecontrol:= dbg_consulta_contato;
+          e_pesquisar_contato.Clear;
+     end
+end;
+
+procedure TF_contato.DBG_consulta_contatoCellClick(Column: TColumn);
+begin
+      datamodulo.IBD_contato.Close;
+    	datamodulo.IBD_contato.ParamByName('pcontato').AsInteger:=
+    	datamodulo.IBQ_contatoNR_SEQUENCIA.AsInteger;
+    	datamodulo.IBD_contato.Open;
+    	PaginaControle_contato.ActivePage := Tab_cadastro_contato;
+    	DBE_nm_contato.SetFocus;
+end;
+
+procedure TF_contato.FormActivate(Sender: TObject);
+begin
+      datamodulo.IBQ_lista_cliente_contato.Close;
+      datamodulo.IBQ_lista_cliente_contato.Open;
+      
+      datamodulo.IBQ_lista_cliente_contato.Last;
+end;
+
+end.

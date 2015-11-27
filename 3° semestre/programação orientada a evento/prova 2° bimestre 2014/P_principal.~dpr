@@ -1,0 +1,13 @@
+program P_principal;
+
+uses
+  Forms,
+  U_principal in 'U_principal.pas' {F_principal};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.CreateForm(TF_principal, F_principal);
+  Application.Run;
+end.

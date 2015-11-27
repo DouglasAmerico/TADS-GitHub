@@ -1,0 +1,189 @@
+CREATE TABLE PREMIO (
+id_premio integer not null,
+ds_premio varchar(40),
+in_pessoal char(1),
+Primary Key(id_premio));
+
+CREATE TABLE FESTIVAL (
+id_festival integer not null,
+nm_festival varchar(60),
+Primary Key(id_festival));
+
+CREATE TABLE GENERO (
+cd_genero integer not null,
+ds_genero varchar(30),
+Primary Key(cd_genero));
+
+CREATE TABLE CATEGORIA (
+cd_categoria integer not null,
+ds_categoria varchar(20),
+vl_categoria numeric(5,2),
+Primary Key(cd_categoria));
+
+CREATE TABLE ESTUDIO (
+cd_estudio integer not null,
+ds_estudio varchar(60),
+Primary Key(cd_estudio));
+
+CREATE TABLE DISTRIBUIDORA (
+cd_distribuidora integer not null,
+ds_distribuidora varchar(60),
+Primary Key(cd_distribuidora));
+
+CREATE TABLE IDIOMA (
+cd_idioma integer not null,
+ds_idioma varchar(30),
+Primary Key(cd_idioma));
+
+CREATE TABLE DIR_ATOR (
+cd_dir_ator integer not null,
+nm_diretor_ator varchar(60),
+ds_nacionalidade varchar(30),
+dt_nasc date,
+Primary Key(cd_dir_ator));
+
+CREATE TABLE ATOR (
+cd_dir_ator not null,
+Primary Key (cd_dir_ator),
+Foreign Key (cd_dir_ator) references DIR_ATOR);
+
+CREATE TABLE DIRETOR (
+cd_dir_ator not null,
+Primary Key (cd_dir_ator),
+Foreign Key (cd_dir_ator) references DIR_ATOR);
+
+CREATE TABLE CLIENTE (
+cd_cliente integer not null,
+nm_cliente varchar(50),
+nr_rg char(10),
+nr_cpf char(10),
+nm_rua varchar(50),
+nr_numero integer,
+ds_complemento varchar(20),
+nm_bairro varchar(30),
+nr_foneres integer,
+nr_fonecom integer,
+nr_celular integer, 
+nm_cidade varchar(40),
+Primary Key(cd_cliente));
+
+CREATE TABLE LOCACAO (
+id_locacao integer not null,
+cd_cliente integer not null,
+dt_locacao date,
+Primary Key (id_locacao),
+Foreign Key (cd_cliente) references CLIENTE);
+
+CREATE TABLE HISTORICO (
+id_historico integer not null,
+ds_historico varchar(30),
+tp_historico char(1),
+Primary Key(id_historico));
+
+CREATE TABLE CONTA (
+cd_cliente integer not null,
+nr_lcto integer not null,
+id_historico integer not null,
+id_locacao integer not null,
+dt_lcto date,
+vl_lcto decimal(10,2),
+Primary Key (cd_cliente, nr_lcto),
+Foreign Key (cd_cliente) references CLIENTE,
+Foreign Key (id_historico) references HISTORICO,
+Foreign Key (id_locacao) references LOCACAO);
+
+CREATE TABLE FILME (
+cd_filme integer not null,
+cd_idioma integer not null,
+cd_categoria integer not null,
+cd_genero integer not null,
+nm_usual varchar(60),
+nm_original varchar(60),
+dt_anocine date,
+dt_anodvd date,
+ds_sinopse varchar(2000),
+qt_duracao integer,
+Primary Key (cd_filme),
+Foreign Key (cd_idioma) references IDIOMA,
+Foreign Key (cd_categoria) references CATEGORIA,
+Foreign Key (cd_genero) references GENERO);
+
+CREATE TABLE PREMIACAO (
+id_premio integer not null,
+id_festival integer not null,
+cd_dir_ator integer not null,
+cd_filme integer not null,
+dt_ano integer,
+Primary Key (id_premio, id_festival),
+Foreign Key (id_premio) references PREMIO,
+Foreign Key (id_festival) references FESTIVAL,
+Foreign Key (cd_dir_ator) references DIR_ATOR,
+Foreign Key (cd_filme) references FILME);
+
+CREATE TABLE ESTUDIO_FILME (
+cd_estudio integer not null,
+cd_filme integer not null,
+Primary Key(cd_estudio, cd_filme),
+Foreign Key (cd_estudio) references ESTUDIO,
+Foreign Key (cd_filme) references FILME);
+
+CREATE TABLE DISTR_FILME (
+cd_distribuidora integer not null,
+cd_filme integer not null,
+Primary Key(cd_distribuidora, cd_filme),
+Foreign Key (cd_distribuidora) references DISTRIBUIDORA,
+Foreign Key (cd_filme) references FILME);
+
+CREATE TABLE AUDIO (
+cd_filme integer not null,
+cd_idioma integer not null,
+tp_audio varchar(60),
+ds_canais varchar(60),
+Primary Key (cd_filme, cd_idioma),
+Foreign Key (cd_filme) references FILME,
+Foreign Key (cd_idioma) references IDIOMA);
+
+CREATE TABLE LEGENDA (
+cd_filme integer not null,
+cd_idioma integer not null,
+Primary Key (cd_filme, cd_idioma),
+Foreign Key (cd_filme) references FILME,
+Foreign Key (cd_idioma) references IDIOMA);
+
+CREATE TABLE PRATELEIRA (
+cd_prateleira integer not null,
+ds_prateleira varchar(60),
+Primary Key (cd_prateleira));
+
+CREATE TABLE DVD (
+cd_dvd integer not null,
+cd_filme integer not null,
+cd_prateleira integer not null,
+in_situacao char,
+Primary Key (cd_dvd),
+Foreign Key (cd_filme) references FILME,
+Foreign Key (cd_prateleira) references PRATELEIRA);
+
+CREATE TABLE LOCACAO_DVD (
+id_locacao integer not null,
+cd_dvd integer not null,
+dt_devolucao date,
+vl_locacao numeric(12,2),
+Primary Key (id_locacao, cd_dvd),
+Foreign Key (id_locacao) references LOCACAO,
+Foreign Key (cd_dvd) references DVD);
+
+CREATE TABLE FILME_ATOR (
+cd_filme integer not null,
+cd_dir_ator integer not null,
+nm_personagem varchar(30),
+Primary Key (cd_filme, cd_dir_ator),
+Foreign Key (cd_filme) references FILME,
+Foreign key (cd_dir_ator) references ATOR);
+
+CREATE TABLE FILME_DIRETOR (
+cd_filme integer not null,
+cd_dir_ator integer not null,
+Primary Key (cd_filme, cd_dir_ator),
+Foreign Key (cd_filme) references FILME,
+Foreign key (cd_dir_ator) references DIRETOR);

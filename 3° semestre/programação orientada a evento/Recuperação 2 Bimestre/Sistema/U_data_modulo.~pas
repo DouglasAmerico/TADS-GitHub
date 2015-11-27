@@ -1,0 +1,44 @@
+unit U_data_modulo;
+
+interface
+
+uses
+  SysUtils, Classes, DB, IBCustomDataSet, IBDatabase;
+
+type
+  TDataModulo = class(TDataModule)
+    IBD_banco: TIBDatabase;
+    IBTransacao: TIBTransaction;
+    IBD_cliente: TIBDataSet;
+    IBD_clienteCD_CLIENTE: TIntegerField;
+    IBD_clienteDS_CLIENTE: TIBStringField;
+    IBD_mesa: TIBDataSet;
+    IBD_mesaCD_MESA: TIntegerField;
+    IBD_mesaCD_CLIENTE: TIntegerField;
+    IBD_mesaVL_TOTAL: TIBBCDField;
+    IBD_mesaDT_CADASTRO: TDateField;
+    IBD_produto: TIBDataSet;
+    IBD_produtoCD_PRODUTO: TIntegerField;
+    IBD_produtoDS_PRODUTO: TIBStringField;
+    IBD_mesa_produto: TIBDataSet;
+    IBD_mesa_produtoCD_MESA: TIntegerField;
+    IBD_mesa_produtoCD_PRODUTO: TIntegerField;
+    IBD_mesa_produtoNR_SEQUENCIA: TIntegerField;
+    IBD_mesa_produtoVL_PRODUTO: TIBBCDField;
+    IBD_mesa_produtoQT_PRODUTO: TIBBCDField;
+    IBD_mesa_produtoDS_PRODUTO: TStringField;
+    IBD_mesa_produtoTOTAL: TFloatField;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  DataModulo: TDataModulo;
+
+implementation
+
+{$R *.dfm}
+
+end.

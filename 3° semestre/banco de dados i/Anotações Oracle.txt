@@ -1,0 +1,44 @@
+﻿# Conecta ao banco de dados
+connect
+
+# Informe o usuário e senha
+system
+masterkey
+
+# Cria o usuário banco com a senha banco
+create user banco identified by banco;
+
+# Atribui poderes de administrador ao usuário banco
+grant dba to banco;
+
+# Mostra o usuário conectado atualmente
+select user from dual;
+
+# Altera o nome da table
+alter table <nome> rename to <novonome>;
+alter table depto rename to departamento;
+
+# Adicionando atributos a tabela
+alter table <tabela> add <atributo> <tipo> <constraint>;
+alter table depto add nm_empresa varchar(80) not null;
+
+# Modificando atributo da tabela
+alter table <tabela> modify (<atributo> <tipo> <constraint>);
+alter table depto modify (nm_empresa varchar(80) null);
+
+# Renomear coluna da tabela
+alter table <tabela> rename column <atributo> to <novonome>;
+alter table depto rename column nm_empresa to empresa;
+
+# Excluir coluna da tabela
+alter table <tabela> drop column <atributo>
+alter table depto drop column nm_empresa;
+
+- criando uma constrint do tipo unique
+alter table empregado add constraint un_empregado unique (novo atributo);
+
+- mostrar nome das tabelas atributos...
+select table_nome from dba_tabelas where owner ='banco';
+
+- ver atributos da tabela
+desc tabela ;

@@ -1,0 +1,12 @@
+avg - medias - numeros
+count - contar linhas//registros /tuplas - conta tudo
+min- menor valor da coluna - 
+max - maior valor da cuoluna 
+sum - somar
+
+having - ele entra depois do grup by, pois ele é um comando que aplica em sima das funções...
+  ele é utilizado para usar a comparação depois que ela ja foi utulizada para somar ou fazer oq se prescisa depois de j ter colocado...
+  essess comando depois do cabeçalho..
+  select job, sum(sal) as resultado from emp
+  group by job
+  having sum(sal) > 5000;

@@ -1,0 +1,19 @@
+program P_Aula_POE;
+
+uses
+  Forms,
+  U_Principal in 'U_Principal.pas' {F_Acesso},
+  U_Cad_Cidade in 'U_Cad_Cidade.pas' {F_Cad_Cidade},
+  U_data_modulo in 'U_data_modulo.pas' {DataModule1: TDataModule},
+  U_acesso in 'U_acesso.pas' {Form2};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.CreateForm(TF_Acesso, F_Acesso);
+  Application.CreateForm(TF_Cad_Cidade, F_Cad_Cidade);
+  Application.CreateForm(TDataModule1, DataModule1);
+  Application.CreateForm(TForm2, Form2);
+  Application.Run;
+end.

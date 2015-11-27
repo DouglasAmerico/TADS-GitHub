@@ -1,0 +1,643 @@
+unit U_ordem_servico;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, ComCtrls, Grids, DBGrids, DB, StdCtrls, Menus, DBCtrls, Mask,
+  IBCustomDataSet, IBQuery;
+
+type
+  TF_ordem_servico = class(TForm)
+    PaginaControle: TPageControl;
+    Tab_ordem_servico: TTabSheet;
+    Tab_consulta: TTabSheet;
+    CB_pesquisar: TComboBox;
+    E_pesquisar: TEdit;
+    B_pesquisar: TButton;
+    DS_cons_os: TDataSource;
+    DS_cons_os_servico: TDataSource;
+    DS_cons_os_servico_pecas: TDataSource;
+    DS_parcelas: TDataSource;
+    DBG_cons_os: TDBGrid;
+    DBG_cons_os_servico: TDBGrid;
+    DBG_cons_os_servico_pecas: TDBGrid;
+    DBG_ds_parcelas: TDBGrid;
+    Popup_parcelas: TPopupMenu;
+    PagarParcial1: TMenuItem;
+    PagarParcela1: TMenuItem;
+    PagarTotal1: TMenuItem;
+    DBGrid1: TDBGrid;
+    DBGrid2: TDBGrid;
+    DS_os_servico: TDataSource;
+    ExtronarParcela1: TMenuItem;
+    ExcluirParcela1: TMenuItem;
+    DS_servicos_pecas: TDataSource;
+    cd_ordem_servico: TLabel;
+    DBE_cd_ordem_servico: TDBEdit;
+    DS_ordem_servico: TDataSource;
+    L_cd_pessoa: TLabel;
+    DBE_cd_pessoa: TDBEdit;
+    L_cd_operacao: TLabel;
+    DBE_cd_operacao: TDBEdit;
+    L_cd_forma: TLabel;
+    DBE_cd_forma: TDBEdit;
+    L_ct_ordem: TLabel;
+    DBE_dt_ordem: TDBEdit;
+    L_vl_ordem: TLabel;
+    DBE_vl_ordem: TDBEdit;
+    L_vl_total_pecas: TLabel;
+    DBEdit7: TDBEdit;
+    L_vl_total_servicos: TLabel;
+    DBE_vl_totl_servico: TDBEdit;
+    B_novo: TButton;
+    B_cancelar: TButton;
+    B_alterar: TButton;
+    B_gravar: TButton;
+    B_excluir: TButton;
+    DBL_operacao: TDBLookupComboBox;
+    DBL_pessoa: TDBLookupComboBox;
+    DBL_pagamento: TDBLookupComboBox;
+    B_adicionar_servico: TButton;
+    B_remover_servico: TButton;
+    DS_consulta_pessoa: TDataSource;
+    DS_consulta_operacao: TDataSource;
+    DS_consulta_pagamento: TDataSource;
+    B_adicionar_peca: TButton;
+    B_remover_peca: TButton;
+    Popup_recuperar: TPopupMenu;
+    RecuperarDados1: TMenuItem;
+    IBQ_atualiza: TIBQuery;
+    IBQ_consulta_saldo: TIBQuery;
+    IBQ_consulta_saldoSOMA: TIBBCDField;
+    procedure B_pesquisarClick(Sender: TObject);
+    procedure DBG_cons_osCellClick(Column: TColumn);
+    procedure DBG_cons_os_servicoCellClick(Column: TColumn);
+    procedure PagarParcial1Click(Sender: TObject);
+    procedure PagarTotal1Click(Sender: TObject);
+    procedure PagarParcela1Click(Sender: TObject);
+    procedure ExtronarParcela1Click(Sender: TObject);
+    procedure ExcluirParcela1Click(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
+    procedure B_novoClick(Sender: TObject);
+    procedure DS_ordem_servicoStateChange(Sender: TObject);
+    procedure B_adicionar_servicoClick(Sender: TObject);
+    procedure B_adicionar_pecaClick(Sender: TObject);
+    procedure B_remover_pecaClick(Sender: TObject);
+    procedure B_cancelarClick(Sender: TObject);
+    procedure B_gravarClick(Sender: TObject);
+    procedure RecuperarDados1Click(Sender: TObject);
+    procedure DBGrid1DblClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+     pordem :integer;
+     procedure editar_servico (key : char);
+     procedure editar_peca (key: char);
+    { Public declarations }
+  end;
+
+var
+  F_ordem_servico: TF_ordem_servico;
+
+implementation
+
+uses U_data_modulo, U_Principal, U_incluir_servico, U_incluir_pecas;
+
+{$R *.dfm}
+
+procedure TF_ordem_servico.editar_peca(key: char);
+begin
+    if (datamodulo.IBD_ordem_servico.State in [dsinsert, dsedit]) then
+     begin
+        if key = '+' then
+         begin
+            datamodulo.IBD_os_servico_pecas.Insert;
+            while true do
+             begin
+              if f_incluir_pecas.ShowModal = mrcancel then
+               begin
+                  datamodulo.IBD_os_servico_pecas.Cancel;
+                  break;
+               end
+              else
+               begin
+               //--------------
+                  if (datamodulo.IBD_os_servico_pecasCD_SERVICO.AsInteger = 0) then
+                   begin
+                    showmessage('Informe o serviço');
+                   end
+                  else if (datamodulo.IBD_os_servico_pecasCD_PECA.AsInteger = 0) then
+                    begin
+                     showmessage('Informe a peca');
+                    end
+                  else if (datamodulo.ibd_os_servico_pecasQT_PECA.asinteger = 0) then
+                    begin
+                      showmessage('Informe a quantidade');
+                    end
+                  else if (datamodulo.IBD_os_servico_pecasVL_PECA.AsInteger = 0) then
+                    begin
+                     showmessage('Informe o valor');
+                    end
+                  else
+                    begin
+                      //implementação
+                      datamodulo.IBD_ordem_servicoVL_TOTAL_PECAS.AsFloat:=
+                      (datamodulo.IBD_ordem_servicoVL_TOTAL_PECAS.AsFloat +
+                       datamodulo.IBD_os_servico_pecasTOTAL_PECA.AsFloat);
+
+                      datamodulo.IBD_os_servico_pecas.Post;
+                      datamodulo.IBD_os_servico_pecas.Insert;
+                    end;
+
+               //--------------
+               end;
+             end;
+         end;
+     end;
+
+    if not (datamodulo.IBD_ordem_servico.IsEmpty) and (key = '-') then
+     begin
+        if not datamodulo.IBD_os_servico_pecas.IsEmpty then
+          begin
+            if messagedlg('Excluir serviço',mtconfirmation,[mbyes,mbno],0) = mryes then
+              begin
+                datamodulo.IBD_ordem_servicoVL_TOTAL_PECAS.AsFloat:=
+                      (datamodulo.IBD_ordem_servicoVL_TOTAL_PECAS.AsFloat -
+                       datamodulo.IBD_os_servico_pecasTOTAL_PECA.AsFloat);
+
+                datamodulo.IBD_os_servico_pecas.Delete;
+                datamodulo.IBD_os_servico_pecas.Transaction.CommitRetaining;
+              end;
+          end;
+     end
+    else
+     begin
+      showmessage('Deve estar em modo iserção ou edição');
+     end;
+end;
+
+
+//--------------------------------------------------------
+
+
+procedure TF_ordem_servico.editar_servico(key: char);
+begin
+    if (datamodulo.IBD_ordem_servico.State in [dsinsert, dsedit]) then
+     begin
+        if key = '+' then
+         begin
+            datamodulo.IBD_os_servico.Insert;
+            while true do
+             begin
+              if f_incluir_servico.ShowModal = mrcancel then
+               begin
+                  datamodulo.IBD_os_servico.Cancel;
+                  break;
+               end
+              else
+               begin
+               //--------------
+                  if (datamodulo.IBD_os_servicoCD_SERVICO.AsInteger = 0) then
+                   begin
+                    showmessage('Informe o serviço');
+                   end
+                  else if (datamodulo.IBD_os_servicoQT_HORAS.AsInteger = 0) then
+                    begin
+                     showmessage('Informe as horas trabalhadas');
+                    end
+                  else if (datamodulo.IBD_os_servicoVL_HORAS.AsInteger = 0) then
+                    begin
+                     showmessage('Informe o valor do servico');
+                    end
+                  else
+                    begin
+                      //implementação
+                      datamodulo.IBD_ordem_servicoVL_TOTAL_SERVICO.AsFloat:=
+                      (datamodulo.IBD_ordem_servicoVL_TOTAL_SERVICO.AsFloat +
+                       datamodulo.IBD_os_servicoTOTAL_SERVICO.AsFloat);
+
+                      datamodulo.IBD_os_servico.Post;
+                      datamodulo.IBD_os_servico.Insert;
+                    end;
+
+               //--------------
+               end;
+             end;
+         end;
+     end;
+
+    if not (datamodulo.IBD_ordem_servico.IsEmpty) and (key = '-') then
+     begin
+        if not datamodulo.IBD_os_servico.IsEmpty then
+          begin
+            if messagedlg('Excluir serviço',mtconfirmation,[mbyes,mbno],0) = mryes then
+              begin
+                datamodulo.IBD_ordem_servicoVL_TOTAL_SERVICO.AsFloat:=
+                      (datamodulo.IBD_ordem_servicoVL_TOTAL_SERVICO.AsFloat -
+                       datamodulo.IBD_os_servicoTOTAL_SERVICO.AsFloat);
+
+                datamodulo.IBD_os_servico.Delete;
+                datamodulo.IBD_os_servico.Transaction.CommitRetaining;
+              end;
+          end;
+     end
+    else
+     begin
+      showmessage('Deve estar em modo iserção ou edição');
+     end;
+end;
+
+procedure TF_ordem_servico.B_pesquisarClick(Sender: TObject);
+begin
+   if e_pesquisar.Text = '' then
+     begin
+        datamodulo.IBQ_cons_os.Close;
+        datamodulo.IBQ_cons_os.SQL.Clear;
+        datamodulo.IBQ_cons_os.SQL.Add('select ordem_servico.*, cad_pessoa.ds_pessoa, forma_pagamento.ds_forma,operacao.ds_operacao from ordem_servico');
+        datamodulo.IBQ_cons_os.SQL.Add('join cad_pessoa on (cad_pessoa.cd_pessoa = ordem_servico.cd_pessoa)');
+        datamodulo.IBQ_cons_os.SQL.Add('inner join forma_pagamento on (forma_pagamento.cd_forma = ordem_servico.cd_forma)');
+        datamodulo.IBQ_cons_os.SQL.Add('inner join operacao on (operacao.cd_operacao = ordem_servico.cd_operacao)');
+        datamodulo.IBQ_cons_os.Open;
+        if datamodulo.IBQ_cons_os.IsEmpty then
+          begin
+            showmessage('Nenhuma Ordem correspondente');
+            e_pesquisar.SetFocus;
+          end;
+   end;
+ //---------------------
+    if e_pesquisar.Text <> '' then
+     begin
+     //-----
+     // combo box geral
+      if cb_pesquisar.ItemIndex = 0 then
+        begin
+          datamodulo.IBQ_cons_os.Close;
+          datamodulo.IBQ_cons_os.SQL.Clear;
+          datamodulo.IBQ_cons_os.SQL.Add('select ordem_servico.*, cad_pessoa.ds_pessoa, forma_pagamento.ds_forma,operacao.ds_operacao from ordem_servico');
+          datamodulo.IBQ_cons_os.SQL.Add('join cad_pessoa on (cad_pessoa.cd_pessoa = ordem_servico.cd_pessoa)');
+          datamodulo.IBQ_cons_os.SQL.Add('inner join forma_pagamento on (forma_pagamento.cd_forma = ordem_servico.cd_forma)');
+          datamodulo.IBQ_cons_os.SQL.Add('inner join operacao on (operacao.cd_operacao = ordem_servico.cd_operacao)');
+          datamodulo.IBQ_cons_os.Open;
+         if datamodulo.IBQ_cons_os.IsEmpty then
+          begin
+            showmessage('Nenhuma Ordem correspondente');
+            e_pesquisar.SetFocus;
+          end;
+       end;
+      //----- combom box codigo
+        if cb_pesquisar.ItemIndex = 1 then
+         begin
+          datamodulo.IBQ_cons_os.Close;
+          datamodulo.IBQ_cons_os.SQL.Clear;
+          datamodulo.IBQ_cons_os.SQL.Add('select ordem_servico.*, cad_pessoa.ds_pessoa, forma_pagamento.ds_forma,operacao.ds_operacao from ordem_servico');
+          datamodulo.IBQ_cons_os.SQL.Add('join cad_pessoa on (cad_pessoa.cd_pessoa = ordem_servico.cd_pessoa)');
+          datamodulo.IBQ_cons_os.SQL.Add('inner join forma_pagamento on (forma_pagamento.cd_forma = ordem_servico.cd_forma)');
+          datamodulo.IBQ_cons_os.SQL.Add('inner join operacao on (operacao.cd_operacao = ordem_servico.cd_operacao)');
+          datamodulo.IBQ_cons_os.SQL.Add('where cad_pessoa.cd_pessoa like '+quotedstr('%'+e_pesquisar.Text + '%'));
+          datamodulo.IBQ_cons_os.Open;
+         if datamodulo.IBQ_cons_os.IsEmpty then
+          begin
+            showmessage('Nenhuma Ordem correspondente');
+            e_pesquisar.SetFocus;
+          end;
+        end;
+     //------ combo box pessoa
+       if cb_pesquisar.ItemIndex = 2 then
+         begin
+          datamodulo.IBQ_cons_os.Close;
+          datamodulo.IBQ_cons_os.SQL.Clear;
+          datamodulo.IBQ_cons_os.SQL.Add('select ordem_servico.*, cad_pessoa.ds_pessoa, forma_pagamento.ds_forma,operacao.ds_operacao from ordem_servico');
+          datamodulo.IBQ_cons_os.SQL.Add('join cad_pessoa on (cad_pessoa.cd_pessoa = ordem_servico.cd_pessoa)');
+          datamodulo.IBQ_cons_os.SQL.Add('inner join forma_pagamento on (forma_pagamento.cd_forma = ordem_servico.cd_forma)');
+          datamodulo.IBQ_cons_os.SQL.Add('inner join operacao on (operacao.cd_operacao = ordem_servico.cd_operacao)');
+          datamodulo.IBQ_cons_os.SQL.Add('where cad_pessoa.ds_pessoa like '+quotedstr('%'+e_pesquisar.Text + '%'));
+          datamodulo.IBQ_cons_os.Open;
+         if datamodulo.IBQ_cons_os.IsEmpty then
+          begin
+            showmessage('Nenhuma Ordem correspondente');
+            e_pesquisar.SetFocus;
+          end;
+        end;
+    end;
+end;
+
+procedure TF_ordem_servico.DBG_cons_osCellClick(Column: TColumn);
+begin
+      datamodulo.IBQ_cons_os_servico.Close;
+      datamodulo.IBQ_cons_os_servico.SQL.Clear;
+      datamodulo.IBQ_cons_os_servico.SQL.Add('select OS_SERVICO.*, SERVICO.DS_SERVICO, (QT_HORAS * VL_HORAS) AS TOTAL');
+      datamodulo.IBQ_cons_os_servico.SQL.Add('from OS_SERVICO');
+      datamodulo.IBQ_cons_os_servico.SQL.Add('INNER JOIN SERVICO ON (SERVICO.CD_SERVICO = OS_SERVICO.CD_SERVICO)');
+      datamodulo.IBQ_cons_os_servico.SQL.Add('WHERE');
+      datamodulo.IBQ_cons_os_servico.SQL.Add('CD_ORDEM = :PORDEM;');
+      datamodulo.IBQ_cons_os_servico.ParamByName('PORDEM').AsInteger := DataModulo.IBQ_cons_osCD_ORDEM.AsInteger;
+      datamodulo.IBQ_cons_os_servico.Open;
+      //----
+      datamodulo.IBD_parcelas.Close;
+      datamodulo.IBD_parcelas.ParamByName('pordem').AsInteger:= DataModulo.IBQ_cons_osCD_ORDEM.AsInteger;
+      datamodulo.IBD_parcelas.Open;
+end;
+
+procedure TF_ordem_servico.DBG_cons_os_servicoCellClick(Column: TColumn);
+begin
+      datamodulo.IBQ_cons_os_servico_pecas.Close;
+      datamodulo.IBQ_cons_os_servico_pecas.SQL.Clear;
+      datamodulo.IBQ_cons_os_servico_pecas.SQL.Add('select os_servico_pecas.*,pecas.ds_peca, (qt_peca * vl_peca) as total from os_servico_pecas');
+      datamodulo.IBQ_cons_os_servico_pecas.SQL.Add('inner join pecas on (pecas.cd_peca = os_servico_pecas.cd_peca)');
+      datamodulo.IBQ_cons_os_servico_pecas.SQL.Add('where');
+      datamodulo.IBQ_cons_os_servico_pecas.SQL.Add('os_servico_pecas.cd_ordem = :pordem and');
+      datamodulo.IBQ_cons_os_servico_pecas.SQL.Add('os_servico_pecas.cd_servico = :pservico');
+      datamodulo.IBQ_cons_os_servico_pecas.ParamByName('pordem').AsInteger:= DataModulo.IBQ_cons_os_servicoCD_ORDEM.AsInteger;
+      datamodulo.IBQ_cons_os_servico_pecas.ParamByName('pservico').AsInteger:= DataModulo.IBQ_cons_os_servicoCD_ORDEM.AsInteger;
+      datamodulo.IBQ_cons_os_servico_pecas.Open;
+end;
+
+procedure TF_ordem_servico.PagarParcial1Click(Sender: TObject);
+var
+  diferenca :real;
+  v_ordem,v_parcela :integer;
+begin
+   diferenca:= 0;
+   diferenca:= datamodulo.IBD_parcelasVL_VENCIMENTO.AsFloat -
+          datamodulo.IBD_parcelasVL_PAGAMENTO.AsFloat;
+   v_ordem:= datamodulo.IBD_parcelasCD_ORDEM.AsInteger;
+   v_parcela:= datamodulo.IBD_parcelasNR_PARCELAS.AsInteger;
+
+   if (diferenca > 0 ) then
+     begin
+       datamodulo.IBD_parcelas.Edit;
+       datamodulo.IBD_parcelasDT_PAGAMENTO.AsDateTime:= date;
+       datamodulo.IBD_parcelas.Post;
+       datamodulo.IBTransacao.CommitRetaining;
+
+       datamodulo.IBD_parcelas.Insert;
+       datamodulo.IBD_parcelasCD_ORDEM.AsInteger:=
+                                datamodulo.IBQ_cons_osCD_ORDEM.AsInteger;
+       datamodulo.IBD_parcelasVL_VENCIMENTO.AsDateTime:= date + 30;
+       datamodulo.IBD_parcelasVL_VENCIMENTO.AsFloat:=diferenca;
+       datamodulo.IBD_parcelasCD_ORDEM_REPARCELA.AsInteger:= v_ordem;
+       datamodulo.IBD_parcelasNR_PARCELA_REPARCELA.AsInteger:= v_parcela;
+       pordem:= v_ordem;
+       datamodulo.IBD_parcelas.Post;
+       datamodulo.IBTransacao.CommitRetaining;
+     end;
+end;
+
+procedure TF_ordem_servico.PagarTotal1Click(Sender: TObject);
+begin
+    datamodulo.IBD_parcelas.First; // posiciona no primeiro registro
+    while not (datamodulo.IBD_parcelas.Eof) do // enqunato não chegar ao final
+      begin
+        if (datamodulo.IBD_parcelasVL_PAGAMENTO.AsFloat = 0) then
+          begin
+              datamodulo.IBD_parcelas.Edit;
+              datamodulo.IBD_parcelasDT_PAGAMENTO.AsDateTime:= date;
+              datamodulo.IBD_parcelasVL_PAGAMENTO.AsFloat:=
+                datamodulo.IBD_parcelasVL_VENCIMENTO.AsFloat;
+              datamodulo.IBD_parcelas.Post;
+              datamodulo.IBTransacao.CommitRetaining;
+          end;
+          datamodulo.IBD_parcelas.Next;  // pular para o proximo registro
+      end;
+end;
+
+procedure TF_ordem_servico.PagarParcela1Click(Sender: TObject);
+begin
+        datamodulo.IBD_parcelas.Edit;
+        datamodulo.IBD_parcelasDT_PAGAMENTO.AsDateTime:= date;
+        datamodulo.IBD_parcelasVL_PAGAMENTO.AsFloat:=
+          datamodulo.IBD_parcelasVL_VENCIMENTO.AsFloat;
+        datamodulo.IBD_parcelas.Post;
+        datamodulo.IBTransacao.CommitRetaining;
+end;
+
+procedure TF_ordem_servico.ExtronarParcela1Click(Sender: TObject);
+begin
+    datamodulo.IBD_parcelas.Edit;
+    datamodulo.IBD_parcelasDT_PAGAMENTO.Clear;
+    datamodulo.IBD_parcelasVL_PAGAMENTO.Clear;
+    datamodulo.IBD_parcelas.Post;
+    datamodulo.IBTransacao.CommitRetaining;
+    
+
+
+end;
+
+procedure TF_ordem_servico.ExcluirParcela1Click(Sender: TObject);
+var v_saldo :real;
+begin
+      {if not datamodulo.IBD_parcelas.IsEmpty then
+        begin
+          controle:= 0;
+          controle:= datamodulo.IBD_parcelasCD_ORDEM.AsInteger;
+          if application.MessageBox('Deseja Excluir o registro','Excluir registro',mb_iconquestion+mb_yesno) = idyes then
+            begin
+               while not (datamodulo.IBD_parcelas.Eof) do
+                begin
+                 if datamodulo.IBD_parcelasCD_ORDEM_REPARCELA.AsInteger = controle then
+                      showmessage('Parcela contem reparcela, quitala primeiro ou excluila primairo antes de excluir parcela');
+
+
+                end;
+
+
+              datamodulo.IBD_parcelas.Delete;
+              datamodulo.IBTransacao.CommitRetaining;
+            end;
+        end;}
+
+  ibq_consulta_saldo.Close;
+  ibq_consulta_saldo.ParamByName('pordem').AsInteger:=
+  datamodulo.IBQ_cons_osCD_ORDEM.AsInteger;
+  ibq_consulta_saldo.Open;
+  v_saldo:= ibq_consulta_saldoSOMA.AsFloat;
+
+  datamodulo.IBD_parcelas.Delete;
+  datamodulo.IBTransacao.CommitRetaining;
+
+  ibq_atualiza.Close;
+  ibq_atualiza.ParamByName('pordem').AsInteger:=
+  datamodulo.IBQ_cons_osCD_ORDEM.AsInteger;
+  ibq_atualiza.ParamByName('pvalor').AsFloat:= v_saldo;
+  ibq_atualiza.Open;
+
+  // consulta parcelas
+  datamodulo.IBD_parcelas.Close;
+  datamodulo.IBD_parcelas.ParamByName('pordem').AsInteger:=
+  datamodulo.IBQ_cons_osCD_ORDEM.AsInteger;
+  datamodulo.IBD_parcelas.Open;
+end;
+
+procedure TF_ordem_servico.FormActivate(Sender: TObject);
+begin
+      datamodulo.IBQ_cons_forma.Close;
+      datamodulo.IBQ_cons_forma.SQL.Clear;
+      datamodulo.IBQ_cons_forma.SQL.Add('select * from forma_pagamento');
+      datamodulo.IBQ_cons_forma.Open;
+      datamodulo.IBQ_cons_forma.Last;
+
+      datamodulo.IBQ_cons_operacao.Close;
+      datamodulo.IBQ_cons_operacao.SQL.Clear;
+      datamodulo.IBQ_cons_operacao.SQL.Add('select * from operacao');
+      datamodulo.IBQ_cons_operacao.Open;
+      datamodulo.IBQ_cons_operacao.Last;
+
+      datamodulo.IBQ_cons_pessoa.Close;
+      datamodulo.IBQ_cons_pessoa.SQL.Clear;
+      datamodulo.IBQ_cons_pessoa.SQL.Add('select * from cad_pessoa');
+      datamodulo.IBQ_cons_pessoa.Open;
+      datamodulo.IBQ_cons_pessoa.Last;
+end;
+
+procedure TF_ordem_servico.B_novoClick(Sender: TObject);
+begin
+      datamodulo.IBD_ordem_servico.Insert;
+
+      datamodulo.IBQ_sequencia.Close;
+      datamodulo.IBQ_sequencia.SQL.Clear;
+      datamodulo.IBQ_sequencia.SQL.Add('select coalesce(max(cd_ordem),0) + 1 as '
+                                        + ' ultimo from ordem_servico');
+      datamodulo.IBQ_sequencia.Open;
+
+      datamodulo.IBD_ordem_servicoCD_ORDEM.AsInteger:=
+        datamodulo.IBQ_sequenciaULTIMO.AsInteger;
+
+      datamodulo.IBD_ordem_servicoDT_ORDEM.AsDateTime:= date;
+end;
+
+procedure TF_ordem_servico.DS_ordem_servicoStateChange(Sender: TObject);
+begin
+  if (datamodulo.IBD_ordem_servico.State in [dsinsert,dsedit]) then
+   begin
+    b_novo.Enabled             := false;
+    b_alterar.Enabled          := false;
+    b_excluir.Enabled          := false;
+    b_gravar.Enabled           := true;
+    b_cancelar.Enabled         := true;
+    b_adicionar_servico.Enabled:= true;
+    b_remover_servico.Enabled  := true;
+    b_adicionar_peca.Enabled   := true;
+    b_remover_peca.Enabled     := true;
+   end
+  else
+   begin
+    b_novo.Enabled             := true;
+    b_alterar.Enabled          := true;
+    b_excluir.Enabled          := true;
+    b_gravar.Enabled           := false;
+    b_cancelar.Enabled         := false;
+    b_adicionar_servico.Enabled:= false;
+    b_remover_servico.Enabled  := false;
+    b_adicionar_peca.Enabled   := false;
+    b_remover_peca.Enabled     := false;
+   end;
+end;
+
+procedure TF_ordem_servico.B_adicionar_servicoClick(Sender: TObject);
+begin
+    editar_servico('+');
+end;
+
+procedure TF_ordem_servico.B_adicionar_pecaClick(Sender: TObject);
+begin
+      if (datamodulo.IBD_os_servico.IsEmpty) then
+       begin
+        showmessage('Selecione um serviços para adicionar peças');
+       end
+      else
+       begin
+        editar_peca('+');
+       end;
+end;
+
+procedure TF_ordem_servico.B_remover_pecaClick(Sender: TObject);
+begin
+      editar_peca('-');
+end;
+
+procedure TF_ordem_servico.B_cancelarClick(Sender: TObject);
+begin
+      if messagedlg('Cancelar ordem de serviço',mtconfirmation,[mbYes,mbNo],0) = mrYes then
+       begin
+        datamodulo.IBD_os_servico_pecas.Cancel;
+        datamodulo.IBD_os_servico.Cancel;
+        datamodulo.IBD_ordem_servico.Cancel;
+        datamodulo.IBTransacao.RollbackRetaining;
+       end;
+end;
+
+procedure TF_ordem_servico.B_gravarClick(Sender: TObject);
+var
+parcela,conta,intervalo : integer;
+vl_parcela : real;
+begin
+      if messagedlg('Confirma a inclusão da ordem de serviço',mtconfirmation,[mbYes,mbNo],0) = mryes then
+       begin
+        datamodulo.IBD_ordem_servicoVL_ORDEM.AsFloat:=
+          datamodulo.IBD_ordem_servicoVL_TOTAL_PECAS.AsFloat +
+          datamodulo.IBD_ordem_servicoVL_TOTAL_SERVICO.AsFloat;
+
+        datamodulo.IBD_ordem_servico.Post;
+        datamodulo.IBTransacao.CommitRetaining;
+
+        // gerar pagamentos
+
+        datamodulo.IBQ_consulta_forma_pagamento.Close;
+        datamodulo.IBQ_consulta_forma_pagamento.ParamByName('pforma').AsInteger:=
+        datamodulo.IBD_ordem_servicoCD_FORMA.AsInteger;
+        datamodulo.IBQ_consulta_forma_pagamento.Open;
+        if not (datamodulo.IBQ_consulta_forma_pagamento.IsEmpty) then
+         begin
+          parcela:= datamodulo.IBQ_consulta_forma_pagamentoNR_PARCELAS.AsInteger;
+          intervalo:= datamodulo.IBQ_consulta_forma_pagamentoNR_INTERVALO.AsInteger;
+          vl_parcela:= trunc(datamodulo.IBD_ordem_servicoVL_ORDEM.AsFloat / parcela);
+
+          conta:= 0;
+          while (conta < parcela) do
+           begin
+              datamodulo.IBD_gerar_parcelas.Insert;
+              if (datamodulo.IBQ_consulta_forma_pagamentoIN_ENTRADA.AsString = 'S') and
+                 (conta = 0) then
+                begin
+                  datamodulo.IBD_gerar_parcelasDT_VENCIMENTO.AsDateTime:= date;
+                  datamodulo.IBD_gerar_parcelasDT_VENCIMENTO.AsDateTime:= date;
+                  datamodulo.IBD_gerar_parcelasVL_PAGAMENTO.AsFloat:= vl_parcela;
+                end
+              else
+                begin
+                  datamodulo.IBD_gerar_parcelasDT_VENCIMENTO.AsDateTime:= date + intervalo;
+                  intervalo:= intervalo + datamodulo.IBQ_consulta_forma_pagamentoNR_INTERVALO.AsInteger;
+                end;
+            datamodulo.IBD_gerar_parcelasCD_ORDEM.AsInteger:= datamodulo.IBD_ordem_servicoCD_ORDEM.AsInteger;
+            datamodulo.IBD_gerar_parcelasNR_PARCELAS.AsInteger:= conta + 1;
+            datamodulo.IBD_gerar_parcelasVL_VENCIMENTO.AsFloat:= vl_parcela;
+            datamodulo.IBD_gerar_parcelas.Post;
+            datamodulo.IBTransacao.CommitRetaining;
+            conta:= conta + 1;
+           end;
+         end;
+       end;
+end;
+
+procedure TF_ordem_servico.RecuperarDados1Click(Sender: TObject);
+begin
+    	datamodulo.IBD_ordem_servico.Close;
+    	datamodulo.IBD_ordem_servico.ParamByName('pordem').AsInteger:=
+    	datamodulo.IBQ_cons_osCD_ORDEM.AsInteger;
+    	datamodulo.IBD_ordem_servico.Open;
+
+    	
+end;
+
+procedure TF_ordem_servico.DBGrid1DblClick(Sender: TObject);
+begin
+      datamodulo.IBD_os_servico_pecas.Close;
+      datamodulo.IBD_os_servico_pecas.ParamByName('pordem').AsInteger:=
+      datamodulo.IBD_ordem_servicoCD_ORDEM.AsInteger;
+      datamodulo.IBD_os_servico_pecas.ParamByName('pservico').AsInteger:=
+      datamodulo.IBD_os_servicoCD_SERVICO.AsInteger;
+      datamodulo.IBD_os_servico_pecas.Open;
+end;
+
+end.

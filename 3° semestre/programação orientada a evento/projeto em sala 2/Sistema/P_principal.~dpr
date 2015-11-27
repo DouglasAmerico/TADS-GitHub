@@ -1,0 +1,15 @@
+program P_principal;
+
+uses
+  Forms,
+  U_Principal in 'U_Principal.pas' {F_Principal},
+  U_consulta in 'U_consulta.pas' {F_Consulta_nf_pedido};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.CreateForm(TF_Principal, F_Principal);
+  Application.CreateForm(TF_Consulta_nf_pedido, F_Consulta_nf_pedido);
+  Application.Run;
+end.

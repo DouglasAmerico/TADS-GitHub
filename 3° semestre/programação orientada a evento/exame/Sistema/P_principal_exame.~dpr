@@ -1,0 +1,17 @@
+program P_principal_exame;
+
+uses
+  Forms,
+  U_principal in 'U_principal.pas' {Form1},
+  U_data_modulo in 'U_data_modulo.pas' {DataModulo: TDataModule},
+  U_consulta_modelo in '..\Banco\U_consulta_modelo.pas' {F_consulta_modelo};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TDataModulo, DataModulo);
+  Application.CreateForm(TF_consulta_modelo, F_consulta_modelo);
+  Application.Run;
+end.

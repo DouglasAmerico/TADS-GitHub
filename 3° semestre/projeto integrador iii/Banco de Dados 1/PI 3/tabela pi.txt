@@ -1,0 +1,18 @@
+create table premio (
+ id_premio integer not null primary key,
+ ds_premio varchar(40) not null,
+ in_pesoal char(1) not null );
+
+create table festival (
+ id_festival integer not null primary key,
+ nm_festival varchar(60));
+
+create table dir_ator( 
+ cd_dir_ator integer not null primary key,
+ nm_diretor_ator varchar(60),
+ ds_nacionalidade varchar(30),
+ dt_nasc date);
+
+create table genero(
+cd_genero integer not null primary key,
+ds_genero varchar(30));

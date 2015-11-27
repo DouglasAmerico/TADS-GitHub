@@ -1,0 +1,27 @@
+where
+ds_login = :plogin and ds_senha = :psenha
+
+
+----
+select * from CAD_USUARIO
+where
+ds_login = :plogin and ds_senha = :psenha
+
+
+datamodule1.ibqconsultaacesso.close;
+datamodule1.ibqconsultaacesso.ParamByName('plogin').AsString := EdLogin.Text;
+datamodule1.ibqconsultaacesso.ParamByName('psenha').AsString := EdSenha.Text;
+if not (datamodelu1.ibqconsultaacesso.IsEmpty) then
+	begin
+	ModalResult := mrOk;
+	conta := 4;
+end
+else
+begin
+conta := conta + 1;
+messagedls('Usuario ou senha Invalido',mtWarning , [mbok],0);
+if (conta >= 3) then
+begin
+ModalResult := mrCancel;
+end;
+end;

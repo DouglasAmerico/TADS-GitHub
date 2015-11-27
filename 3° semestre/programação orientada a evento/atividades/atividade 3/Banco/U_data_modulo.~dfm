@@ -1,0 +1,40 @@
+object DataModule1: TDataModule1
+  OldCreateOrder = False
+  Left = 397
+  Top = 273
+  Height = 296
+  Width = 514
+  object IBD_banco: TIBDatabase
+    Connected = True
+    DatabaseName = 
+      '127.0.0.1:C:\Users\Douglas '#193'lex\TADS\3'#176' Semestre\Programa'#231#227'o Ori' +
+      'entada a Evento\Atividades\Atividade 3\Banco\BANCO ATIVIDADE 3.G' +
+      'DB'
+    Params.Strings = (
+      'user_name=SYSDBA'
+      'password=masterkey'
+      'lc_ctype=ISO8859_1')
+    LoginPrompt = False
+    DefaultTransaction = IBTransacao
+    IdleTimer = 0
+    SQLDialect = 3
+    TraceFlags = []
+    Left = 56
+    Top = 40
+  end
+  object IBTransacao: TIBTransaction
+    Active = False
+    DefaultDatabase = IBD_banco
+    AutoStopAction = saNone
+    Left = 56
+    Top = 104
+  end
+  object IBD_cidade: TIBDataSet
+    Database = IBD_banco
+    Transaction = IBTransacao
+    BufferChunks = 1000
+    CachedUpdates = False
+    Left = 416
+    Top = 40
+  end
+end

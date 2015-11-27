@@ -1,0 +1,25 @@
+0.5 - Incluir o campo dt_nascimento na tabela de clientes.
+1-Retornar todas as colunas de todos os registros da tabela de clientes.
+2-Retornar o nome e a data de nascimento de todos os clientes.
+3-Retornar o nome e o telefone dos clientes com idade >= 15.
+4-Apresente os seguintes dados, nome, cpf, rg no seguintes formato:
+
+NOME	CPF		RG
+JOSE	005050404	239239329
+
+5.Apresente, Nome, RUa, Numero, Complemento, bairro e Cidade no formato:
+
+Ex: Rua Brasil, nº 1001 - Apartamento 1 - Centro - Campo Mourão
+
+6. Retornar o código e o nome dos clientes que possuem 'A' no nome.
+7. Retornar o código e o nome dos clientes que seus nomes começam com 'A'.
+8. Retornar o código e o nome dos clientes que seus nomes terminam com 'A'.
+
+//////////////////////////////////////////////////////////////////////////////////
+
+9. retornar a código, nome e o telefone dos clientes que codigo for > 10 e o nome conter a letra "O"
+10. inserir 10 novos clientes na tabela com o campo nr_celular nulo.
+11. selecione todos os clientes que possuem não possuem telefones celulares.
+12. selecione todos clientes que possuem numeros celulares.
+14. selecione todos clientes que possuem o nome com mais de 10 caracteres.
+15. selecione todos clientes que possuem numeros de celuler com 10 caracteres e o nome contenha mais que 10 caracteres.

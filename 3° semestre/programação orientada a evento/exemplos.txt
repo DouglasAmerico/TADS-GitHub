@@ -1,0 +1,107 @@
+create table cad_cidade
+(
+  cd_cidade integer not null primary key,
+  ds_cidade varchar(60) not null
+  );
+
+create table cad_cliente
+(
+    cd_cliente integer not null primary key, 
+    ds_cliente varchar(60) not null,
+    in_ativo char(1) not null,
+    cd_cidade integer not null references cad_cidade
+    );
+
+create table nf
+(
+    cd_nf integer not null,
+    cd_cliente integer not null references cad_cliente,
+    dt_cadastro date not null,
+    vl_total numeric(10,4),
+    primary key (cd_nf,cd_cliente)
+    );
+
+create table produto
+(
+    cd_produto integer not null primary key,
+    ds_produto varchar(60) not null,
+    qt_estoque numeric(10,4),
+    vl_produto numeric(10,4)
+     );
+
+create table nf_produto
+(
+    cd_nf integer not null,
+    cd_cliente integer not null,
+    cd_produto integer not null references produto, 
+    cd_sequencia integer not null,
+    vl_produto numeric(10,4),
+    qt_produto numeric(10,4),
+    primary key (cd_nf,cd_cliente,cd_produto,cd_sequencia),
+    foreign key (cd_nf,cd_cliente) references nf (cd_nf,cd_cliente)
+    );
+
+
+
+
+
+
+insert into cad_cidade (cd_cidade,ds_cidade) values (1,'campo mourao');
+insert into cad_cidade (cd_cidade,ds_cidade) values (2,'araruna');
+insert into cad_cidade (cd_cidade,ds_cidade) values (3,'maringa');
+
+insert into cad_cidade (cd_cliente,ds_cliente,in_ativo,cd_cidade)
+    values (1,'joao da silva','a',1);
+insert into cad_cidade (cd_cliente,ds_cliente,in_ativo,cd_cidade)
+    values (2,'joaquina arruda','b',3);
+
+insert into produto values (1,'mouse',10,25.10);
+insert into produto values (2,'caneta',10,1.10);
+insert into produto values (3,'borracha',5,0.50);
+insert into produto values (4,'fita',12,5.10);
+
+insert into nf values (1,1,'11/02/2014',150);
+insert into nf values (2,2,'11/02/2014',550);
+
+insert
+
+-- * todos os atributos...
+-- select é selecionar...
+-- between é entre uma condição e outra...
+-- in so visualiza os valores apresentados...
+-- notin ele vai visualizar os valores menos os especificados...
+-- notbetween ele vai mostrar todos menos os valores entre os especificados...
+-- like vai pesquisar a descrição...
+      --colocar % na descrição para procurar antes ou depois do nome...
+-- sun são as operações soma , divisão e etc.
+-- o max é utlizado para achar o maior numero
+-- min achar o menor numero
+-- avg usado para cahr a media das coisas
+-- caunt contar o numero de registros
+
+select sum (vl_produto * qt_produto) from nf_produto
+where
+ cd_nf = 1 and cd_cliente = 1 and cd_produo = 1 and cd_sequencia = 1-
+
+ --comando de atribuicao
+ select coalesce (max(cd_x),0) + 1 from x
+
+ select coalesce(max(cd_nf),0) + 1 from nf
+ where
+  cd_cliente = 2
+
+delete from x where cd_x = 1
+
+
+select *from produto
+update produtset ds_produto = 'caneta' where cd_produto = 2
+
+
+
+
+
+
+
+select * from cad_cidade
+where
+ cd_cidade =

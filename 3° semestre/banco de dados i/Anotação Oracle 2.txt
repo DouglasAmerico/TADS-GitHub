@@ -1,0 +1,14 @@
+/// exercio 3
+select nm_cliente as nome,
+trunc (months_between (sysdate,dt_nascimento)/12) as idade
+from clinete;
+
+
+// exercicio 
+select nm_clinete as nome_com_a
+where nm_cliente like '%a%';
+   
+	com 'a' no inicio...
+
+select nm_cliente as nome_com_a from cliente where nm_clientes like '%a';
+

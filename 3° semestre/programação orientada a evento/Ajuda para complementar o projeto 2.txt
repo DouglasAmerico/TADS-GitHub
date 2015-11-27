@@ -1,0 +1,6 @@
+if (fconsuf.showmodal = mrok) then
+  begin
+     datamodulo.ibd_cidadeds_uf.asstring :=
+     datamodulo.ibq_consulta_ufds_uf.asstring;
+     eduf.text := datamodule.ibq_consulta_ufnm_uf.asstring; 
+  end;	

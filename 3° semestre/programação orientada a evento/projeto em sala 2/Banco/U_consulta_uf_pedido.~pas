@@ -1,0 +1,37 @@
+unit U_consulta_uf_pedido;
+
+interface
+
+uses
+  SysUtils, Classes, DB, IBCustomDataSet, IBQuery, IBDatabase;
+
+type
+  TDataModulo = class(TDataModule)
+    IBD_banco: TIBDatabase;
+    IBTransacao: TIBTransaction;
+    IBQ_nf_produto: TIBQuery;
+    IBQ_produto: TIBQuery;
+    IBQ_produtoCD_PRODUTO: TIntegerField;
+    IBQ_produtoDS_PRODUTO: TIBStringField;
+    IBQ_produtoQT_ESTOQUE: TIBBCDField;
+    IBQ_produtoVL_PRODUTO: TIBBCDField;
+    IBQ_nf_produtoCD_NF: TIntegerField;
+    IBQ_nf_produtoCD_CLIENTE: TIntegerField;
+    IBQ_nf_produtoCD_PRODUTO: TIntegerField;
+    IBQ_nf_produtoCD_SEQUENCIA: TIntegerField;
+    IBQ_nf_produtoVL_PRODUTO: TIBBCDField;
+    IBQ_nf_produtoQT_PRODUTO: TIBBCDField;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  DataModulo: TDataModulo;
+
+implementation
+
+{$R *.dfm}
+
+end.

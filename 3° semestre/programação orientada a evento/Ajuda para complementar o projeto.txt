@@ -1,0 +1,17 @@
+para travar que o usuario não use a digitação, 
+
+limpara a consulta:  
+travar para não colocar caracter diferente: 
+clicar na combo, clicar na oncharge envent:   ed_tipo, .clear para limpara, ed_tipo . set focus para selecionar...
+se o indice da minha combo foi = 1 so entra numero
+onkey press clicar: se combo_tipo itemindex = 1 então if not (key in [#48..#57]) and not (key in [#8]
+				and not (key in [#240]) theb
+				key := #0;
+
+evento onkey press: chamar a procedure...
+
+ordenar os tabs: tabordem, vai clicando nos botões e enumerando...
+
+perguntar p o usuario se quer realmente feichar o formulario: onclosequery (f_cad_cidade), avaliar o estado travando primairamente a variavel como falsa, testa se ele esta em inserir ou editardai manda a mensagem, se sim tru na variavel e assim fecha, se clicar no bottão naão ele ainda fica depois fecha colocando true na variavel... 
+
+ 
