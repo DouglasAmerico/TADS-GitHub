@@ -1,0 +1,11 @@
+Trabalho de pesquisa:
+Estimativa de projetos de software;
+ Escopo e viabilidade do software; 
+Recursos;
+ Técnicas de Decomposição -   Dimensionamento do software; 
+Estimativa baseada no problema; 
+Estimativa baseada em LOC;
+ Estimativa baseada em FP; 
+Estimativa baseada em Processo;
+ Estimativas com Casos de Uso;
+Modelo COCOMO II - Estimativa de Projetos Orientado a Objetos.

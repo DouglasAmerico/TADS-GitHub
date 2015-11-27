@@ -1,0 +1,47 @@
+
+<!DOCTYPE HTML>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <link type="text/css" rel="stylesheet" href="index.css">
+  <title>Analise e Especificação de Sistema</title>
+</head>
+<body>
+	<div class="tela clientes">
+		<h2>PEDIDOS</h2>
+		<button class="fechar"></button>
+		<form id="fromclientes" name="frmclientes" method="post" action="">
+                        <div class="campo">
+				<label>Fornecedor<span>*</span></label>
+				<select id="cidade" name="cidade" class="campo-seletor" style="width:180px;">
+                                        <option value="ro">Dell</option>
+                                        <option value="ro">Acer</option>
+					<option value="pr">Amazon</option>
+					<option value="bh">IBM</option>
+					<option value="go">Apple</option>
+				</select>
+			</div>
+                        <div class="sep"></div>
+			<div class="campo">
+				<label>Produto<span>*</span></label>
+				<input id="nome" name="nome" class="campo-texto" style="width:300px;" type="text" value="">
+			</div>
+                        <div class="sep"></div>
+			<div class="campo">
+				<label>Quantidade<span>*</span></label>
+				<input id="nome" name="nome" class="campo-texto" style="width:100px;" type="text" value="">
+			</div>
+                        <div class="sep"></div>
+			<div class="campo">
+				<label>Data<span>*</span></label>
+				<input id="nome" name="nome" class="campo-texto" style="width:150px;" type="text" value="">
+                        </div>
+		</form>
+		<div class="acoes">
+			<button class="botao" onclick="alert('CLIENTE SALVO COM SUCESSO!')">SALVAR</button>
+			<button class="botao" onclick="confirm('ALTERAR DADOS DO CLIENTE?')">ALTERAR</button>
+			<button class="botao" onclick="frmclientes.reset()">LIMPAR</button>
+		</div>
+	</div>
+</body>
+</html>
