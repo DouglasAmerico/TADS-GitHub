@@ -1,0 +1,22 @@
+
+	RF01: Gerenciar não a entrada e saída como um conjunto separado mais sim como um levantamento único, 
+pois o próprio jeito de venda não está associado a um estoque. Assim o sistema terá somente pedidos e entregas.
+	O sistema deverá fazer comunicação entre os seus, para uma vez que um produtor não tendo o estoque total do 
+pedido feito pelo cliente, devera pelo próprio sistema lançar um alerta da quantidade faltante, assim os outros produtores podem disponibilizar suas flores para completar o pedido primário. O sistema devera suportar vários produtores disponibilizando pequenas quantidades para suprir o pedido primário. O sistema deve disponibilizar as respostas do alerta para o produtor do pedido primário que selecionara as quantidades que vai querer, e de quais produtores externos ira pegar.
+	O sistema deve conter um controle de clientes completo.
+	O sistema deve conter um controle de produtores externos completo para as movimentações externas do sistema.
+	O sistema deve conter um controle de fornecedores completo para que possa ser efetivado e registrado as 
+dívidas externas, para a infraestrutura da empresa.
+	O sistema deve conter um controle de produtor (flores, que não necessariamente serão só rosas), completo 
+para a colocação e exatidão das vendas propostas.
+	O sistema deve ter um campo de mensagens entre produtores (Messenger), para que possa ser feita a comunicação 
+dos mesmos sem ter que usar outros meios de comunicação.
+	O sistema deve conter um “cadastro” de sobras que deverá ser informado aos outros proprietários, para que 
+assim flores que estão sobrando em um produtor possam ser utilizadas pelos outros, o sistema deve gerenciar a fatura 
+e o pagamento das dúzias dando ao produtor que cedeu as flores de sobra e deve também ter um juros que será descontado 
+do pagamento pelo custo que de transporte do mesmo para o cliente final, que foi feito pelo produtor receptor.
+	O sistema deve gerenciar as contas informando em tempo real o caixa, os gastos, as dividas extras (sendo tanto 
+de fornecedores de produtor, quanto produtores externos), o ganho diário e assim por diante.
+	O sistema terá um sinal audível informando qualquer notificação feita pelos outros produtores, com relação a 
+pedido de flores, sobra de flores e mensagens de bate papo.
+	O sistema deverá emitir comprovantes e notas com todos os dados da empresa, cliente, produto e quantidades.

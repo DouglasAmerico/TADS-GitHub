@@ -1,0 +1,13 @@
+pfisica
+pjuridica
+cliente
+produtor
+pedido
+venda
+produto
+telefone
+endereco
+parcelas
+forma de pagamento
+tipo de produto
+	

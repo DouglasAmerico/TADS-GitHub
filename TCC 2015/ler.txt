@@ -1,0 +1,1 @@
+ler sobre agregação e composição em um diagram de classes
